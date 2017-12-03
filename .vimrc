@@ -29,12 +29,11 @@ Plugin 'vim-airline/vim-airline'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'vim-scripts/indentpython.vim'   "自动缩进
-"Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 Plugin 'Yggdroot/indentLine'
-"Plugin 'klen/python-mode'
-Plugin 'easymotion/vim-easymotion'
-"Plugin 'vim-scripts/taglist.vim'
 Plugin 'majutsushi/tagbar'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'bitc/vim-bad-whitespace'
 
 
 " All of your Plugins must be added before the following line
@@ -57,13 +56,14 @@ filetype plugin indent on    " required
 
 set encoding=utf-8 "支持UTF-8编码
 
-
-
-"set ruler         " 打开状态栏标尺
-"set cc=80 "设置标尺,高亮显示第80行
 set nu            "显示行号
 set softtabstop=4 " 使得按退格键时可以一次删掉 4 个空格
 set tabstop=4     " 设定 tab 长度为 4
+set shiftwidth=4  "设置 智能缩进的宽度
+set expandtab     "设置 将 tab 转换为 4 个空格
+
+
+
 
 set cursorcolumn
 set cursorline  " or  set cuc  set cul
@@ -89,23 +89,66 @@ nmap fw     :w<CR>
 nmap fq     :q<CR>
 nmap fwq    :wq<CR>
 
-"nnoremap <Leader>d :TlistOpen<CR>
-nnoremap <Leader>d :TagbarToggle<CR>
+
+
+"nnoremap <Leader>g :TlistOpen<CR>
+nnoremap <Leader>g :TagbarToggle<CR>
+let g:tagbar_width = 21
+let g:tagbar_autofocus = 1 "If you set this option the cursor will move to the Tagbar window when it is opened.
+let g:tagbar_compact = 1
+"let g:tagbar_autopreview = 1
+"let g:tagbar_previewwin_pos = "aboveleft"
+let g:tagbar_autoclose = 1
+
+
 
 
 " NERDTree config
-nnoremap <Leader>g :NERDTreeToggle<CR>
+nnoremap <Leader>d :NERDTreeToggle<CR>
+"autocmd vimenter * NERDTree "打开vim时自动打开NERDTree
+let NERDTreeMinimalUI=1 "disables the 'Bookmarks' labor 'Press ? for help' text.
+let NERDTreeWinSize=20
+
 
 
 "在插入模式下连按jj就相当于按下了esc
 inoremap jj <esc>
 
 
-
 nmap <S-d> <C-b>
 nmap <S-c> <C-f>
 nmap <S-w> <C-w>
+nmap <S-]> <C-]>
+nmap <S-t> <C-t>
 
 
-let NERDTreeMinimalUI=1 "disables the 'Bookmarks' labor 'Press ? for help' text.
-let NERDTreeWinSize=20
+
+
+
+
+map <F5> :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+		exec "w"
+		if &filetype == 'c'
+				exec "!g++ % -o %<"
+				exec "!time ./%<"
+		elseif &filetype == 'cpp'
+				exec "!g++ % -o %<"
+				exec "!time ./%<"
+		elseif &filetype == 'java'
+				exec "!javac %"
+				exec "!time java %<"
+		elseif &filetype == 'sh'
+				:!time bash %
+		elseif &filetype == 'python'
+				exec "!time python %"
+		elseif &filetype == 'html'
+				exec "!firefox % &"
+		elseif &filetype == 'go'
+				"        exec "!go build %<"
+				exec "!time go run %"
+		elseif &filetype == 'mkd'
+				exec "!~/.vim/markdown.pl % > %.html &"
+				exec "!firefox %.html &"
+		endif
+endfunc
