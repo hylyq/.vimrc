@@ -34,6 +34,7 @@ Plugin 'majutsushi/tagbar'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'bitc/vim-bad-whitespace'
+Plugin 'kien/ctrlp.vim'
 
 
 " All of your Plugins must be added before the following line
@@ -117,16 +118,17 @@ inoremap jj <esc>
 
 nmap <S-d> <C-b>
 nmap <S-c> <C-f>
-nmap <S-w> <C-w>
-nmap <S-]> <C-]>
-nmap <S-t> <C-t>
+"nmap <S-w> <C-w>
+"nmap <S-]> <C-]>
+"nmap <S-t> <C-t>
 
 
 
 
 
 
-map <F5> :call CompileRunGcc()<CR>
+"map <F5> :call CompileRunGcc()<CR>
+nnoremap <Leader>r :call CompileRunGcc()<CR>
 func! CompileRunGcc()
 		exec "w"
 		if &filetype == 'c'
@@ -152,3 +154,24 @@ func! CompileRunGcc()
 				exec "!firefox %.html &"
 		endif
 endfunc
+
+
+
+
+
+
+function HeaderPython()
+    call setline(1, "#!/usr/bin/env python")
+    call append(1, "#-*- coding:utf8 -*-")
+    call append(2, "# Power by hylyq " . strftime('%Y-%m-%d %T', localtime()))
+    normal G
+    normal o
+    normal o
+endf
+autocmd bufnewfile *.py call HeaderPython()
+
+
+
+
+hi Folded   term=standout   ctermbg=LightGrey   ctermfg=DarkBlue   guibg=LightGrey   guifg=DarkBlue
+"hi FoldColumn   term=standout   ctermbg=LightGrey   ctermfg=DarkBlue   guibg=Grey20   guifg=White
